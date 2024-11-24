@@ -1,145 +1,123 @@
-const flashcards = {};
+let flashcards = {};
 let currentUser = null;
 let currentDeck = null;
+let currentCardIndex = 0;
 
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-  loadApp();
-});
-
-function loadApp() {
-  if (currentUser) {
+document.getElementById('login-button').addEventListener('click', () => {
+  const username = document.getElementById('username-input').value.trim();
+  if (username) {
+    currentUser = username;
+    if (!flashcards[currentUser]) {
+      flashcards[currentUser] = {};
+    }
     document.getElementById('login-container').classList.add('hidden');
     document.getElementById('main-container').classList.remove('hidden');
-    document.getElementById('username').textContent = currentUser;
+    document.getElementById('welcome-message').textContent = `Welcome, ${username}`;
     loadDecks();
-  } else {
-    document.getElementById('login-container').classList.remove('hidden');
-    document.getElementById('main-container').classList.add('hidden');
   }
-}
+});
 
-function logIn() {
-  const username = document.getElementById('login-username').value.trim();
-  if (username === '') {
-    alert('Username cannot be empty!');
-    return;
-  }
-
-  currentUser = username;
-  if (!flashcards[currentUser]) {
-    flashcards[currentUser] = {};
-  }
-
-  loadApp();
-}
-
-function logOut() {
+document.getElementById('logout-button').addEventListener('click', () => {
   currentUser = null;
-  loadApp();
-}
+  currentDeck = null;
+  currentCardIndex = 0;
+  document.getElementById('main-container').classList.add('hidden');
+  document.getElementById('login-container').classList.remove('hidden');
+  document.getElementById('username-input').value = '';
+});
 
-function createDeck() {
+document.getElementById('create-deck-button').addEventListener('click', () => {
   document.getElementById('main-container').classList.add('hidden');
   document.getElementById('add-deck-container').classList.remove('hidden');
-}
+});
 
-function saveDeck() {
+document.getElementById('add-deck-button').addEventListener('click', () => {
   const deckName = document.getElementById('new-deck-name').value.trim();
-  if (deckName === '') {
-    alert('Deck name cannot be empty!');
-    return;
+  if (deckName && !flashcards[currentUser][deckName]) {
+    flashcards[currentUser][deckName] = [];
+    document.getElementById('add-deck-container').classList.add('hidden');
+    document.getElementById('main-container').classList.remove('hidden');
+    loadDecks();
   }
+});
 
-  if (!flashcards[currentUser]) {
-    flashcards[currentUser] = {};
+document.getElementById('cancel-create-deck').addEventListener('click', () => {
+  document.getElementById('add-deck-container').classList.add('hidden');
+  document.getElementById('main-container').classList.remove('hidden');
+});
+
+document.getElementById('add-card-button').addEventListener('click', () => {
+  const front = document.getElementById('front-input').value.trim();
+  const back = document.getElementById('back-input').value.trim();
+  if (front && back) {
+    flashcards[currentUser][currentDeck].push({ front, back });
+    document.getElementById('front-input').value = '';
+    document.getElementById('back-input').value = '';
   }
+});
 
-  flashcards[currentUser][deckName] = [];
-  document.getElementById('new-deck-name').value = '';
-  backToMain();
+document.getElementById('finish-adding-cards').addEventListener('click', () => {
+  document.getElementById('add-card-container').classList.add('hidden');
+  document.getElementById('main-container').classList.remove('hidden');
   loadDecks();
-}
+});
+
+document.getElementById('flip-card').addEventListener('click', () => {
+  const card = flashcards[currentUser][currentDeck][currentCardIndex];
+  const cardContent = document.getElementById('flashcard-content');
+  cardContent.textContent = cardContent.textContent === card.front ? card.back : card.front;
+});
+
+document.getElementById('next-card').addEventListener('click', () => {
+  currentCardIndex = (currentCardIndex + 1) % flashcards[currentUser][currentDeck].length;
+  showCard();
+});
+
+document.getElementById('exit-deck').addEventListener('click', () => {
+  document.getElementById('flashcard-container').classList.add('hidden');
+  document.getElementById('main-container').classList.remove('hidden');
+});
 
 function loadDecks() {
   const deckList = document.getElementById('deck-list');
   deckList.innerHTML = '';
-
   for (const deck in flashcards[currentUser]) {
-    const deckButton = document.createElement('button');
-    const deckInfo = flashcards[currentUser][deck];
+    const deckContainer = document.createElement('div');
+    deckContainer.classList.add('deck-container');
 
-    deckButton.textContent = `${deck} (${deckInfo.length} cards)`;
+    const deckButton = document.createElement('button');
+    deckButton.textContent = `${deck} (${flashcards[currentUser][deck].length} cards)`;
     deckButton.onclick = () => {
       currentDeck = deck;
       viewDeck();
     };
 
-    deckList.appendChild(deckButton);
+    const addCardButton = document.createElement('button');
+    addCardButton.textContent = 'Add Cards';
+    addCardButton.onclick = () => {
+      currentDeck = deck;
+      openAddCardPage(deck);
+    };
+
+    deckContainer.appendChild(deckButton);
+    deckContainer.appendChild(addCardButton);
+    deckList.appendChild(deckContainer);
   }
-}
-
-function addCard() {
-  const front = document.getElementById('card-front').value.trim();
-  const back = document.getElementById('card-back').value.trim();
-
-  if (!front || !back) {
-    alert('Both front and back text are required!');
-    return;
-  }
-
-  flashcards[currentUser][currentDeck].push({ front, back, box: 1 });
-  document.getElementById('card-front').value = '';
-  document.getElementById('card-back').value = '';
-}
-
-function finishAddingCards() {
-  backToMain();
-  loadDecks();
 }
 
 function viewDeck() {
-  const deck = flashcards[currentUser][currentDeck];
-  if (deck.length === 0) {
-    alert('No cards in this deck yet!');
-    return;
-  }
-
-  document.getElementById('flashcard-container').classList.remove('hidden');
   document.getElementById('main-container').classList.add('hidden');
-  document.getElementById('deck-title').textContent = currentDeck;
-
-  let currentCardIndex = 0;
-  const flashcard = document.getElementById('flashcard');
-  const flashcardContentFront = document.getElementById('flashcard-front');
-  const flashcardContentBack = document.getElementById('flashcard-back');
-
-  flashcardContentFront.textContent = deck[currentCardIndex].front;
-  flashcardContentBack.textContent = deck[currentCardIndex].back;
-  flashcard.classList.remove('flipped');
-
-  flashcard.addEventListener('click', () => {
-    flashcard.classList.toggle('flipped');
-  });
-
-  document.getElementById('know-button').onclick = () => {
-    if (currentCardIndex < deck.length - 1) {
-      currentCardIndex++;
-      flashcardContentFront.textContent = deck[currentCardIndex].front;
-      flashcardContentBack.textContent = deck[currentCardIndex].back;
-      flashcard.classList.remove('flipped');
-    } else {
-      alert('You have reviewed all the cards!');
-      backToMain();
-    }
-  };
-
-  document.getElementById('back-to-decks-button').onclick = backToMain;
+  document.getElementById('flashcard-container').classList.remove('hidden');
+  showCard();
 }
 
-function backToMain() {
-  document.getElementById('main-container').classList.remove('hidden');
-  document.getElementById('add-deck-container').classList.add('hidden');
-  document.getElementById('add-card-container').classList.add('hidden');
-  document.getElementById('flashcard-container').classList.add('hidden');
+function showCard() {
+  const card = flashcards[currentUser][currentDeck][currentCardIndex];
+  document.getElementById('flashcard-content').textContent = card.front;
+}
+
+function openAddCardPage(deckName) {
+  document.getElementById('main-container').classList.add('hidden');
+  document.getElementById('add-card-container').classList.remove('hidden');
+  document.getElementById('current-deck-name').textContent = deckName;
 }
