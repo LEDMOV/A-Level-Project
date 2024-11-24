@@ -14,9 +14,18 @@ document.getElementById('login-button').addEventListener('click', () => {
   }
 });
 
+document.getElementById('logout-button').addEventListener('click', () => {
+  currentUser = null;
+  document.getElementById('main-container').classList.add('hidden');
+  document.getElementById('login-container').classList.remove('hidden');
+});
+
 function showMainContainer() {
   document.getElementById('login-container').classList.add('hidden');
   document.getElementById('main-container').classList.remove('hidden');
+  document.getElementById('add-card-container').classList.add('hidden');
+  document.getElementById('new-deck-container').classList.add('hidden');
+  document.getElementById('flashcard-container').classList.add('hidden');
   loadDecks();
 }
 
@@ -34,6 +43,13 @@ function loadDecks() {
     deckList.appendChild(listItem);
   }
 
+  document.querySelectorAll('.view-deck-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+      currentDeck = e.target.dataset.deck;
+      viewDeck();
+    });
+  });
+
   document.querySelectorAll('.add-card-button').forEach(button => {
     button.addEventListener('click', (e) => {
       currentDeck = e.target.dataset.deck;
@@ -42,6 +58,38 @@ function loadDecks() {
       document.getElementById('add-card-container').classList.remove('hidden');
     });
   });
+}
+
+function viewDeck() {
+  const deck = flashcards[currentUser][currentDeck];
+  if (deck.length === 0) {
+    alert('No cards in this deck yet!');
+    return;
+  }
+
+  document.getElementById('flashcard-container').classList.remove('hidden');
+  document.getElementById('main-container').classList.add('hidden');
+  document.getElementById('deck-title').textContent = currentDeck;
+
+  let currentCardIndex = 0;
+  const flashcardContent = document.getElementById('flashcard-content');
+  flashcardContent.textContent = deck[currentCardIndex].front;
+
+  document.getElementById('know-button').onclick = () => {
+    if (currentCardIndex < deck.length - 1) {
+      currentCardIndex++;
+      flashcardContent.textContent = deck[currentCardIndex].front;
+    } else {
+      alert('You have reviewed all the cards!');
+      backToMain();
+    }
+  };
+
+  document.getElementById('dont-know-button').onclick = () => {
+    alert(`Back of the card: ${deck[currentCardIndex].back}`);
+  };
+
+  document.getElementById('back-to-decks-button').onclick = backToMain;
 }
 
 document.getElementById('create-deck-button').addEventListener('click', () => {
@@ -56,7 +104,8 @@ document.getElementById('save-deck-button').addEventListener('click', () => {
     localStorage.setItem('flashcards', JSON.stringify(flashcards));
     document.getElementById('new-deck-name').value = '';
     showMainContainer();
-    document.getElementById('new-deck-container').classList.add('hidden');
+  } else {
+    alert('Deck name is invalid or already exists.');
   }
 });
 
@@ -68,10 +117,18 @@ document.getElementById('add-card-button').addEventListener('click', () => {
     localStorage.setItem('flashcards', JSON.stringify(flashcards));
     document.getElementById('card-front').value = '';
     document.getElementById('card-back').value = '';
+    alert('Card added!');
+  } else {
+    alert('Both front and back are required.');
   }
 });
 
 document.getElementById('done-adding-button').addEventListener('click', () => {
-  document.getElementById('add-card-container').classList.add('hidden');
+  currentDeck = null;
   showMainContainer();
 });
+
+function backToMain() {
+  document.getElementById('flashcard-container').classList.add('hidden');
+  showMainContainer();
+}
