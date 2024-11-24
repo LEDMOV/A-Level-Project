@@ -1,12 +1,43 @@
 const flashcards = {};
-let currentUser = 'guest';
+let currentUser = null;
 let currentDeck = null;
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('username').textContent = currentUser;
-  loadDecks();
+  loadApp();
 });
+
+function loadApp() {
+  if (currentUser) {
+    document.getElementById('login-container').classList.add('hidden');
+    document.getElementById('main-container').classList.remove('hidden');
+    document.getElementById('username').textContent = currentUser;
+    loadDecks();
+  } else {
+    document.getElementById('login-container').classList.remove('hidden');
+    document.getElementById('main-container').classList.add('hidden');
+  }
+}
+
+function logIn() {
+  const username = document.getElementById('login-username').value.trim();
+  if (username === '') {
+    alert('Username cannot be empty!');
+    return;
+  }
+
+  currentUser = username;
+  if (!flashcards[currentUser]) {
+    flashcards[currentUser] = {};
+  }
+
+  loadApp();
+}
+
+function logOut() {
+  currentUser = null;
+  loadApp();
+}
 
 function createDeck() {
   document.getElementById('main-container').classList.add('hidden');
@@ -34,17 +65,11 @@ function loadDecks() {
   const deckList = document.getElementById('deck-list');
   deckList.innerHTML = '';
 
-  if (!flashcards[currentUser]) {
-    flashcards[currentUser] = {};
-  }
-
   for (const deck in flashcards[currentUser]) {
     const deckButton = document.createElement('button');
     const deckInfo = flashcards[currentUser][deck];
-    const box1Count = deckInfo.filter(card => card.box === 1).length;
-    const box2Count = deckInfo.filter(card => card.box === 2).length;
 
-    deckButton.textContent = `${deck} (${deckInfo.length} cards | Box1: ${box1Count}, Box2: ${box2Count})`;
+    deckButton.textContent = `${deck} (${deckInfo.length} cards)`;
     deckButton.onclick = () => {
       currentDeck = deck;
       viewDeck();
@@ -110,10 +135,6 @@ function viewDeck() {
   };
 
   document.getElementById('back-to-decks-button').onclick = backToMain;
-}
-
-function logOut() {
-  alert('Logging out...');
 }
 
 function backToMain() {
