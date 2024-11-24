@@ -1,5 +1,6 @@
 const flashcards = JSON.parse(localStorage.getItem('flashcards')) || {};
 let currentUser = null;
+let currentDeck = null;
 
 document.getElementById('login-button').addEventListener('click', () => {
   const username = document.getElementById('username').value.trim();
@@ -25,13 +26,22 @@ function loadDecks() {
   const userDecks = flashcards[currentUser];
   for (const deck in userDecks) {
     const listItem = document.createElement('li');
-    listItem.innerText = `${deck} (${userDecks[deck].length} cards)`;
-    const viewButton = document.createElement('button');
-    viewButton.innerText = 'View';
-    viewButton.addEventListener('click', () => showFlashcards(deck));
-    listItem.appendChild(viewButton);
+    listItem.innerHTML = `
+      <span>${deck} (${userDecks[deck].length} cards)</span>
+      <button class="view-deck-button" data-deck="${deck}">View</button>
+      <button class="add-card-button" data-deck="${deck}">Add Cards</button>
+    `;
     deckList.appendChild(listItem);
   }
+
+  document.querySelectorAll('.add-card-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+      currentDeck = e.target.dataset.deck;
+      document.getElementById('add-card-deck-title').textContent = currentDeck;
+      document.getElementById('main-container').classList.add('hidden');
+      document.getElementById('add-card-container').classList.remove('hidden');
+    });
+  });
 }
 
 document.getElementById('create-deck-button').addEventListener('click', () => {
@@ -50,13 +60,18 @@ document.getElementById('save-deck-button').addEventListener('click', () => {
   }
 });
 
-function showFlashcards(deckName) {
-  document.getElementById('main-container').classList.add('hidden');
-  document.getElementById('flashcard-container').classList.remove('hidden');
-  document.getElementById('deck-title').innerText = deckName;
-}
+document.getElementById('add-card-button').addEventListener('click', () => {
+  const front = document.getElementById('card-front').value.trim();
+  const back = document.getElementById('card-back').value.trim();
+  if (front && back) {
+    flashcards[currentUser][currentDeck].push({ front, back });
+    localStorage.setItem('flashcards', JSON.stringify(flashcards));
+    document.getElementById('card-front').value = '';
+    document.getElementById('card-back').value = '';
+  }
+});
 
-document.getElementById('logout-button').addEventListener('click', () => {
-  document.getElementById('main-container').classList.add('hidden');
-  document.getElementById('login-container').classList.remove('hidden');
+document.getElementById('done-adding-button').addEventListener('click', () => {
+  document.getElementById('add-card-container').classList.add('hidden');
+  showMainContainer();
 });
