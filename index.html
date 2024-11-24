@@ -3,34 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcards App</title>
+  <title>Flashcard App</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="login-container">
-    <h1>Welcome to Flashcards</h1>
-    <input type="text" id="username-input" placeholder="Enter your username">
+    <h1>Flashcard App</h1>
+    <input type="text" id="username-input" placeholder="Enter username">
     <button id="login-button">Log In</button>
   </div>
 
   <div id="main-container" class="hidden">
-    <h1 id="welcome-message"></h1>
-    <button id="create-deck-button">Create New Deck</button>
+    <h1 id="welcome-message">Welcome!</h1>
     <button id="logout-button">Log Out</button>
+    <h2>Your Decks</h2>
     <div id="deck-list"></div>
-  </div>
-
-  <div id="add-deck-container" class="hidden">
-    <h2>Create New Deck</h2>
-    <input type="text" id="new-deck-name" placeholder="Deck Name">
-    <button id="add-deck-button">Add Deck</button>
-    <button id="cancel-create-deck">Cancel</button>
+    <button id="create-deck-button">Create New Deck</button>
   </div>
 
   <div id="add-card-container" class="hidden">
-    <h2>Add Cards to <span id="current-deck-name"></span></h2>
-    <input type="text" id="front-input" placeholder="Front of the card">
-    <input type="text" id="back-input" placeholder="Back of the card">
+    <h2>Adding Cards to <span id="current-deck-name"></span></h2>
+    <input type="text" id="front-input" placeholder="Front of card">
+    <input type="text" id="back-input" placeholder="Back of card">
     <button id="add-card-button">Add Card</button>
     <button id="finish-adding-cards">Finish Adding Cards</button>
   </div>
@@ -41,7 +35,9 @@
       <p id="flashcard-content"></p>
     </div>
     <button id="flip-card">Flip Card</button>
-    <button id="next-card">Next Card</button>
+    <button id="dont-know-button">I don't know this</button>
+    <button id="sort-of-know-button">I sort of know this</button>
+    <button id="know-this-button">I know this</button>
     <button id="exit-deck">Exit Deck</button>
   </div>
 

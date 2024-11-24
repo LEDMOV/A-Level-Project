@@ -1,31 +1,29 @@
 body {
   font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }
 
 .hidden {
   display: none;
 }
 
-#login-container,
-#main-container,
-#add-deck-container,
-#add-card-container,
-#flashcard-container {
-  margin: 20px;
-  text-align: center;
-}
-
 button {
-  margin: 10px;
-  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
   border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
+  padding: 10px 20px;
+  margin: 5px;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -34,33 +32,22 @@ button:hover {
 
 input {
   padding: 10px;
-  margin: 10px;
-  font-size: 16px;
-  width: 200px;
-}
-
-.deck-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px 0;
-}
-
-.deck-container button {
   margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 #flashcard {
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #fff;
   width: 300px;
   height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   text-align: center;
   font-size: 18px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin: 20px auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
