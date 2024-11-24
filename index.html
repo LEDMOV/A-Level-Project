@@ -3,64 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcards App</title>
+  <title>Flashcard App</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Login Section -->
-    <div id="login-container">
-      <h1>Welcome to Flashcards</h1>
-      <label for="username">Enter your username:</label>
-      <input type="text" id="username" placeholder="Username">
-      <button id="login-button">Log In</button>
-    </div>
-
-    <!-- Main Section -->
-    <div id="main-container" class="hidden">
-      <header>
-        <h1>Flashcards</h1>
-        <button id="logout-button">Log Out</button>
-      </header>
-      <div id="deck-container">
-        <h2>Your Decks</h2>
-        <ul id="deck-list"></ul>
-        <button id="create-deck-button">+ Create Deck</button>
-      </div>
-    </div>
-
-    <!-- Flashcard View Section -->
-    <div id="flashcard-container" class="hidden">
-      <h2 id="deck-title"></h2>
-      <div id="flashcard-display">
-        <p id="flashcard-content"></p>
-      </div>
-      <div id="flashcard-controls">
-        <button id="know-button">I Know This</button>
-        <button id="dont-know-button">I Don't Know</button>
-      </div>
-      <button id="back-to-decks-button">Back to Decks</button>
-    </div>
-
-    <!-- New Deck Section -->
-    <div id="new-deck-container" class="hidden">
-      <h2>Create New Deck</h2>
-      <label for="new-deck-name">Deck Name:</label>
-      <input type="text" id="new-deck-name" placeholder="Enter deck name">
-      <button id="save-deck-button">Save Deck</button>
-    </div>
-
-    <!-- Add Cards Section -->
-    <div id="add-card-container" class="hidden">
-      <h2>Add Cards to <span id="add-card-deck-title"></span></h2>
-      <label for="card-front">Front:</label>
-      <input type="text" id="card-front" placeholder="Enter front of the card">
-      <label for="card-back">Back:</label>
-      <input type="text" id="card-back" placeholder="Enter back of the card">
-      <button id="add-card-button">Add Card</button>
-      <button id="done-adding-button">Done Adding Cards</button>
-    </div>
+  <div id="main-container">
+    <h1>Welcome, <span id="username"></span></h1>
+    <button onclick="createDeck()">Create New Deck</button>
+    <div id="deck-list"></div>
+    <button onclick="logOut()">Log Out</button>
   </div>
+
+  <div id="add-deck-container" class="hidden">
+    <h2>Create a New Deck</h2>
+    <input type="text" id="new-deck-name" placeholder="Enter deck name">
+    <button onclick="saveDeck()">Save Deck</button>
+    <button onclick="backToMain()">Cancel</button>
+  </div>
+
+  <div id="add-card-container" class="hidden">
+    <h2>Add Cards to <span id="current-deck-name"></span></h2>
+    <input type="text" id="card-front" placeholder="Enter front text">
+    <input type="text" id="card-back" placeholder="Enter back text">
+    <button onclick="addCard()">Add Card</button>
+    <button onclick="finishAddingCards()">Finish Adding Cards</button>
+  </div>
+
+  <div id="flashcard-container" class="hidden">
+    <h2 id="deck-title"></h2>
+    <div class="flashcard-container">
+      <div id="flashcard" class="flashcard">
+        <div id="flashcard-front" class="front"></div>
+        <div id="flashcard-back" class="back"></div>
+      </div>
+    </div>
+    <button id="know-button">Next</button>
+    <button id="back-to-decks-button">Back to Decks</button>
+  </div>
+
   <script src="flashcards.js"></script>
 </body>
 </html>
