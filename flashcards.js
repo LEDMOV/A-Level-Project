@@ -36,6 +36,14 @@ document.getElementById('create-deck-button').addEventListener('click', () => {
   }
 });
 
+document.getElementById('deck-list').addEventListener('click', (e) => {
+  if (e.target && e.target.matches('button')) {
+    const deckName = e.target.textContent.split(' ')[0];
+    currentDeck = deckName;
+    viewDeck();
+  }
+});
+
 document.getElementById('add-card-button').addEventListener('click', () => {
   const front = document.getElementById('front-input').value.trim();
   const back = document.getElementById('back-input').value.trim();
@@ -44,6 +52,7 @@ document.getElementById('add-card-button').addEventListener('click', () => {
     document.getElementById('front-input').value = '';
     document.getElementById('back-input').value = '';
     saveData();
+    loadDecks();  // Update the deck list with the new card added
   }
 });
 
