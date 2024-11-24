@@ -1,5 +1,6 @@
 let decks = [];
 
+// Initialize UI
 document.getElementById("createDeckButton").addEventListener("click", () => {
     const deckName = prompt("Enter a name for your new deck");
     if (deckName) {
@@ -9,6 +10,7 @@ document.getElementById("createDeckButton").addEventListener("click", () => {
     }
 });
 
+// Save Flashcard
 document.getElementById("saveFlashcardButton").addEventListener("click", () => {
     const question = document.getElementById("newFlashcardQuestion").value;
     const answer = document.getElementById("newFlashcardAnswer").value;
@@ -23,8 +25,17 @@ document.getElementById("saveFlashcardButton").addEventListener("click", () => {
     }
 });
 
+// Cancel New Card Form
 document.getElementById("cancelNewCardButton").addEventListener("click", () => {
     document.getElementById("newCardForm").style.display = "none";
+});
+
+// Toggle Dark Mode
+document.getElementById("darkModeToggle").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    document.getElementById("app").classList.toggle("dark-mode");
+    document.body.classList.toggle("light-mode");
+    document.getElementById("app").classList.toggle("light-mode");
 });
 
 function displayDecks() {
@@ -33,6 +44,7 @@ function displayDecks() {
     decks.forEach((deck, index) => {
         const deckElement = document.createElement("div");
         deckElement.textContent = deck.name;
+        deckElement.classList.add("deck");
         deckElement.addEventListener("click", () => {
             displayFlashcards(deck);
         });
@@ -44,9 +56,13 @@ function displayFlashcards(deck) {
     const flashcardsContainer = document.getElementById("flashcardsContainer");
     flashcardsContainer.innerHTML = `<h2>Flashcards for ${deck.name}</h2>`;
     
-    deck.flashcards.forEach((flashcard, index) => {
+    deck.flashcards.forEach((flashcard) => {
         const flashcardElement = document.createElement("div");
-        flashcardElement.textContent = `Q: ${flashcard.question} - A: ${flashcard.answer}`;
+        flashcardElement.classList.add("flashcard");
+        flashcardElement.innerHTML = `
+            <p><strong>Q:</strong> ${flashcard.question}</p>
+            <p><strong>A:</strong> ${flashcard.answer}</p>
+        `;
         flashcardsContainer.appendChild(flashcardElement);
     });
     

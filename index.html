@@ -7,22 +7,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="app">
         <h1>Flashcards App</h1>
         
-        <button id="createDeckButton">Create Deck</button>
-        <div id="decksContainer"></div>
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle" class="toggle-btn">Toggle Dark Mode</button>
         
-        <div id="flashcardsContainer"></div>
+        <!-- Create Deck Button -->
+        <button id="createDeckButton" class="action-btn">Create Deck</button>
+        
+        <div id="decksContainer" class="container"></div>
+        <div id="flashcardsContainer" class="container"></div>
 
         <!-- New Flashcard Form -->
-        <div id="newCardForm" style="display:none;">
+        <div id="newCardForm" class="form-container" style="display:none;">
             <h2>Create New Flashcard</h2>
             <input type="text" id="newFlashcardQuestion" placeholder="Question">
             <input type="text" id="newFlashcardAnswer" placeholder="Answer">
-            <button id="saveFlashcardButton">Save Flashcard</button>
-            <button id="cancelNewCardButton">Cancel</button>
+            <button id="saveFlashcardButton" class="action-btn">Save Flashcard</button>
+            <button id="cancelNewCardButton" class="cancel-btn">Cancel</button>
         </div>
     </div>
 
