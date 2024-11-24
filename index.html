@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcards App</title>
-    <style>
-        /* Your CSS for layout and dark mode */
-        body.dark-mode {
-            background-color: #333;
-            color: #fff;
-        }
-        body.light-mode {
-            background-color: #fff;
-            color: #000;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards App</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="light-mode">
-    <div id="app">
-        <button id="createDeckButton">Create New Deck</button>
-        <button id="darkModeToggle">Toggle Dark Mode</button>
+<body>
+  <div id="app">
+    <header>
+      <h1>Flashcards App</h1>
+      <button id="toggle-theme">🌙 Dark Mode</button>
+    </header>
 
-        <div id="decksContainer"></div>
-        
-        <!-- Flashcards Form -->
-        <div id="newCardForm" style="display:none;">
-            <input type="text" id="newFlashcardQuestion" placeholder="Question">
-            <input type="text" id="newFlashcardAnswer" placeholder="Answer">
-            <button id="saveFlashcardButton">Save Flashcard</button>
-            <button id="cancelNewCardButton">Cancel</button>
-        </div>
+    <main>
+      <div id="deck-container"></div>
 
-        <div id="flashcardsContainer"></div>
-    </div>
+      <button id="new-deck-btn">Create New Deck</button>
 
-    <script src="flashcards.js"></script>
+      <div id="deck-form" class="hidden">
+        <label for="deck-name">Deck Name:</label>
+        <input type="text" id="deck-name" placeholder="Enter deck name">
+        <button id="save-deck">Save Deck</button>
+        <button id="cancel-deck">Cancel</button>
+      </div>
+      
+      <div id="flashcards-container" class="hidden">
+        <h3 id="deck-title"></h3>
+        <button id="new-flashcard-btn">Add Flashcard</button>
+        <div id="flashcards-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="flashcards.js"></script>
 </body>
 </html>
