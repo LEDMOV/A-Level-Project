@@ -1,9 +1,13 @@
 // Global variables
-let decks = JSON.parse(localStorage.getItem('decks')) || [];
-let currentDeck = null;
+let users = JSON.parse(localStorage.getItem('users')) || {};
+let currentUser = null;
 let isDarkMode = false;
 
 // DOM elements
+const loginScreen = document.getElementById('login-screen');
+const usernameInput = document.getElementById('username');
+const loginBtn = document.getElementById('login-btn');
+const app = document.getElementById('app');
 const deckContainer = document.getElementById('deck-container');
 const newDeckBtn = document.getElementById('new-deck-btn');
 const deckForm = document.getElementById('deck-form');
@@ -19,7 +23,8 @@ const toggleThemeBtn = document.getElementById('toggle-theme');
 // Functions
 function renderDecks() {
   deckContainer.innerHTML = '';
-  decks.forEach((deck, index) => {
+  const userDecks = users[currentUser]?.decks || [];
+  userDecks.forEach((deck, index) => {
     const deckButton = document.createElement('button');
     deckButton.classList.add('deck-button');
     deckButton.innerHTML = `
@@ -33,15 +38,11 @@ function renderDecks() {
 }
 
 function openDeck(index) {
-  currentDeck = decks[index];
-  deckTitle.textContent = currentDeck.name;
+  const userDecks = users[currentUser]?.decks || [];
+  const selectedDeck = userDecks[index];
+  deckTitle.textContent = selectedDeck.name;
   flashcardsList.innerHTML = '';
-  renderFlashcards();
-  flashcardsContainer.classList.remove('hidden');
-}
-
-function renderFlashcards() {
-  currentDeck.flashcards.forEach((flashcard, index) => {
+  selectedDeck.flashcards.forEach((flashcard) => {
     const flashcardItem = document.createElement('div');
     flashcardItem.innerHTML = `
       <p><strong>Q:</strong> ${flashcard.question}</p>
@@ -49,6 +50,7 @@ function renderFlashcards() {
     `;
     flashcardsList.appendChild(flashcardItem);
   });
+  flashcardsContainer.classList.remove('hidden');
 }
 
 function saveDeck() {
@@ -58,43 +60,64 @@ function saveDeck() {
       name: deckName,
       flashcards: [],
       box1: 0,
-      box2: 0
+      box2: 0,
     };
-    decks.push(newDeck);
-    localStorage.setItem('decks', JSON.stringify(decks));
+    if (!users[currentUser]) {
+      users[currentUser] = { decks: [] };
+    }
+    users[currentUser].decks.push(newDeck);
+    localStorage.setItem('users', JSON.stringify(users));
     renderDecks();
     deckForm.classList.add('hidden');
   }
 }
 
-function toggleTheme() {
-  isDarkMode = !isDarkMode;
-  if (isDarkMode) {
-    document.body.classList.add('dark-mode');
-  } else {
-    document.body.classList.remove('dark-mode');
+function loginUser() {
+  const username = usernameInput.value.trim();
+  if (username) {
+    currentUser = username;
+    if (!users[currentUser]) {
+      users[currentUser] = { decks: [] };
+    }
+    localStorage.setItem('users', JSON.stringify(users));
+    loginScreen.classList.add('hidden');
+    app.classList.remove('hidden');
+    renderDecks();
   }
 }
 
+function toggleTheme() {
+  isDarkMode = !isDarkMode;
+  document.body.classList.toggle('dark-mode', isDarkMode);
+}
+
 // Event listeners
+loginBtn.addEventListener('click', loginUser);
+
 newDeckBtn.addEventListener('click', () => {
   deckForm.classList.remove('hidden');
 });
 
 saveDeckBtn.addEventListener('click', saveDeck);
-cancelDeckBtn.addEventListener('click', () => deckForm.classList.add('hidden'));
+
+cancelDeckBtn.addEventListener('click', () => {
+  deckForm.classList.add('hidden');
+});
 
 newFlashcardBtn.addEventListener('click', () => {
-  const question = prompt("Enter the question:");
-  const answer = prompt("Enter the answer:");
+  const question = prompt('Enter the question:');
+  const answer = prompt('Enter the answer:');
   if (question && answer) {
-    currentDeck.flashcards.push({ question, answer });
-    localStorage.setItem('decks', JSON.stringify(decks));
-    renderFlashcards();
+    const userDecks = users[currentUser]?.decks || [];
+    userDecks[currentDeckIndex].flashcards.push({ question, answer });
+    localStorage.setItem('users', JSON.stringify(users));
+    openDeck(currentDeckIndex);
   }
 });
 
 toggleThemeBtn.addEventListener('click', toggleTheme);
 
-// Initial render
-renderDecks();
+// Initial state
+if (!currentUser) {
+  app.classList.add('hidden');
+}
