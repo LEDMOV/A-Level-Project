@@ -4,10 +4,14 @@ let decks = [];
 document.getElementById("createDeckButton").addEventListener("click", () => {
     const deckName = prompt("Enter a name for your new deck");
     if (deckName) {
-        const newDeck = { name: deckName, flashcards: [] };
+        const newDeck = { 
+            name: deckName, 
+            flashcards: [],
+            box1: 0,  // Track cards in box 1
+            box2: 0   // Track cards in box 2
+        };
         decks.push(newDeck);
         displayDecks();
-    }
 });
 
 // Save Flashcard
@@ -18,6 +22,7 @@ document.getElementById("saveFlashcardButton").addEventListener("click", () => {
     
     if (question && answer && currentDeck) {
         currentDeck.flashcards.push({ question, answer });
+        currentDeck.box1++; // New flashcards start in box 1
         displayFlashcards(currentDeck);
         document.getElementById("newFlashcardQuestion").value = "";
         document.getElementById("newFlashcardAnswer").value = "";
@@ -40,11 +45,19 @@ document.getElementById("darkModeToggle").addEventListener("click", () => {
 
 function displayDecks() {
     const decksContainer = document.getElementById("decksContainer");
-    decksContainer.innerHTML = "";
+    decksContainer.innerHTML = "";  // Clear previous decks
+
     decks.forEach((deck, index) => {
-        const deckElement = document.createElement("div");
-        deckElement.textContent = deck.name;
-        deckElement.classList.add("deck");
+        const deckElement = document.createElement("button");
+        deckElement.classList.add("deck-button");
+        deckElement.innerHTML = `
+            <strong>${deck.name}</strong><br>
+            <div class="deck-info">
+                Flashcards: ${deck.flashcards.length} | 
+                Box 1: ${deck.box1} | 
+                Box 2: ${deck.box2}
+            </div>
+        `;
         deckElement.addEventListener("click", () => {
             displayFlashcards(deck);
         });
@@ -65,7 +78,7 @@ function displayFlashcards(deck) {
         `;
         flashcardsContainer.appendChild(flashcardElement);
     });
-    
+
     document.getElementById("newCardForm").style.display = "block";
 }
 

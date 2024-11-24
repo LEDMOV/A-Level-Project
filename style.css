@@ -110,3 +110,26 @@ input {
         opacity: 1;
     }
 }
+
+/* Deck Button Styles */
+.deck-button {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.deck-button:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+}
+
+.deck-button .deck-info {
+    font-size: 14px;
+    color: #6c757d;
+}
