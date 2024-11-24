@@ -4,31 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards App</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Your CSS for layout and dark mode */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        body.light-mode {
+            background-color: #fff;
+            color: #000;
+        }
+    </style>
 </head>
-<body>
-    <div id="app" class="light-mode">
-        <h1>Flashcards App</h1>
-        <button id="createDeckButton" class="action-btn">Create New Deck</button>
+<body class="light-mode">
+    <div id="app">
+        <button id="createDeckButton">Create New Deck</button>
+        <button id="darkModeToggle">Toggle Dark Mode</button>
 
-        <!-- Decks Container -->
         <div id="decksContainer"></div>
-
-        <!-- Flashcards Container -->
-        <div id="flashcardsContainer"></div>
-
-        <!-- New Card Form (Hidden by default) -->
-        <div id="newCardForm" class="form-container" style="display: none;">
-            <input type="text" id="newFlashcardQuestion" placeholder="Enter Question">
-            <input type="text" id="newFlashcardAnswer" placeholder="Enter Answer">
-            <button id="saveFlashcardButton" class="action-btn">Save Card</button>
-            <button id="cancelNewCardButton" class="cancel-btn">Cancel</button>
+        
+        <!-- Flashcards Form -->
+        <div id="newCardForm" style="display:none;">
+            <input type="text" id="newFlashcardQuestion" placeholder="Question">
+            <input type="text" id="newFlashcardAnswer" placeholder="Answer">
+            <button id="saveFlashcardButton">Save Flashcard</button>
+            <button id="cancelNewCardButton">Cancel</button>
         </div>
 
-        <!-- Dark Mode Toggle -->
-        <button id="darkModeToggle" class="toggle-btn">Toggle Dark Mode</button>
+        <div id="flashcardsContainer"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="flashcards.js"></script>
 </body>
 </html>
