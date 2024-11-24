@@ -11,10 +11,10 @@ document.getElementById('login-button').addEventListener('click', () => {
     if (!flashcards[currentUser]) {
       flashcards[currentUser] = {};
     }
+    loadDecks();
     document.getElementById('login-container').classList.add('hidden');
     document.getElementById('main-container').classList.remove('hidden');
     document.getElementById('welcome-message').textContent = `Welcome, ${username}`;
-    loadDecks();
   }
 });
 
@@ -31,6 +31,7 @@ document.getElementById('create-deck-button').addEventListener('click', () => {
   const deckName = prompt('Enter the name of the new deck:').trim();
   if (deckName && !flashcards[currentUser][deckName]) {
     flashcards[currentUser][deckName] = [];
+    saveData();
     loadDecks();
   }
 });
@@ -42,12 +43,14 @@ document.getElementById('add-card-button').addEventListener('click', () => {
     flashcards[currentUser][currentDeck].push({ front, back, confidence: 0 });
     document.getElementById('front-input').value = '';
     document.getElementById('back-input').value = '';
+    saveData();
   }
 });
 
 document.getElementById('finish-adding-cards').addEventListener('click', () => {
   document.getElementById('add-card-container').classList.add('hidden');
   document.getElementById('main-container').classList.remove('hidden');
+  saveData();
   loadDecks();
 });
 
@@ -65,20 +68,23 @@ document.getElementById('exit-deck').addEventListener('click', () => {
   reviewQueue = [];
   document.getElementById('flashcard-container').classList.add('hidden');
   document.getElementById('main-container').classList.remove('hidden');
+  saveData();
 });
 
 function loadDecks() {
   const deckList = document.getElementById('deck-list');
   deckList.innerHTML = '';
-  for (const deck in flashcards[currentUser]) {
-    const deckDiv = document.createElement('div');
-    deckDiv.classList.add('deck-container');
-    deckDiv.innerHTML = `<button>${deck} (${flashcards[currentUser][deck].length} cards)</button>`;
-    deckDiv.querySelector('button').addEventListener('click', () => {
-      currentDeck = deck;
-      viewDeck();
-    });
-    deckList.appendChild(deckDiv);
+  if (flashcards[currentUser]) {
+    for (const deck in flashcards[currentUser]) {
+      const deckDiv = document.createElement('div');
+      deckDiv.classList.add('deck-container');
+      deckDiv.innerHTML = `<button>${deck} (${flashcards[currentUser][deck].length} cards)</button>`;
+      deckDiv.querySelector('button').addEventListener('click', () => {
+        currentDeck = deck;
+        viewDeck();
+      });
+      deckList.appendChild(deckDiv);
+    }
   }
 }
 
@@ -104,5 +110,20 @@ function updateConfidence(change) {
   } else if (card.confidence > 0) {
     setTimeout(() => reviewQueue.push(card), 10000);
   }
+  saveData();
   showCard();
 }
+
+function saveData() {
+  localStorage.setItem('flashcards', JSON.stringify(flashcards));
+}
+
+function loadData() {
+  const savedData = localStorage.getItem('flashcards');
+  if (savedData) {
+    flashcards = JSON.parse(savedData);
+  }
+}
+
+// Load data on page load
+window.addEventListener('load', loadData);
